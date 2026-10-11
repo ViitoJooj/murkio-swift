@@ -16,15 +16,12 @@ The package has no dependencies.
 
 ## Install
 
-Swift Package Manager only resolves a package whose `Package.swift` is at the root of a
-repository. This directory is that package: publishing it means pushing a copy of it to a
-repository of its own, and apps then depend on that one:
+In Xcode: File › Add Package Dependencies, with the URL of this repository. In a
+`Package.swift`:
 
 ```swift
-.package(url: "<the URL of the package repository>", from: "0.1.0")
+.package(url: "https://github.com/ViitoJooj/murkio-swift.git", branch: "master")
 ```
-
-Until then, add it as a local package (Xcode: File › Add Package Dependencies › Add Local).
 
 ## Quick start
 
@@ -203,6 +200,9 @@ canvas itself come translated from the dashboard.
 | | `transport` | a `MurkioTransport` of your own (a test double…) |
 
 ## Developing
+
+This repository is a git submodule of the Murkio identity service
+(`libs/external/swift`), and the commands below run from that checkout.
 
 ```sh
 swift build
