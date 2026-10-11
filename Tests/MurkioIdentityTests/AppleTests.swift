@@ -166,11 +166,26 @@ final class CanvasViewTests: XCTestCase {
         let root = AnyView(view.frame(width: CGFloat(width), alignment: .top).frame(maxHeight: .infinity, alignment: .top))
         let hosting = NSHostingView(rootView: root)
         hosting.frame = NSRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height))
+        // A test process has no application object until one is asked for, and
+        // a window made in code frees itself on close unless told otherwise
+        // (the test holds it too, which would free it twice).
+        _ = NSApplication.shared
         let window = NSWindow(contentRect: hosting.frame, styleMask: [.borderless], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
         window.contentView = hosting
         window.orderFrontRegardless()
         hosting.layoutSubtreeIfNeeded()
         return (hosting, window)
+    }
+
+    /// True when SwiftUI placed exactly the expected elements, each within half a point of its box.
+    private func matches(_ frames: [String: CGRect], _ expected: [String: JSONValue]) -> Bool {
+        guard Set(frames.keys) == Set(expected.keys) else { return false }
+        return expected.allSatisfy { id, want in
+            guard let frame = frames[id] else { return false }
+            return abs(Double(frame.minX) - (want["x"]?.number ?? -1)) <= 0.5 && abs(Double(frame.minY) - (want["y"]?.number ?? -1)) <= 0.5
+                && abs(Double(frame.width) - (want["w"]?.number ?? -1)) <= 0.5 && abs(Double(frame.height) - (want["h"]?.number ?? -1)) <= 0.5
+        }
     }
 
     func testEveryElementIsDrawnWhereTheWebDrawsIt() async throws {
@@ -203,7 +218,8 @@ final class CanvasViewTests: XCTestCase {
 
             let (hosting, window) = host(canvas, width: width)
             defer { window.close() }
-            for _ in 0..<300 where Set(frames.value.keys) != Set(expected.keys) {
+            // The first pass runs before the canvas knows its width or has loaded; wait for the settled layout.
+            for _ in 0..<300 where !matches(frames.value, expected) {
                 try await Task.sleep(nanoseconds: 10_000_000)
                 hosting.layoutSubtreeIfNeeded()
             }
