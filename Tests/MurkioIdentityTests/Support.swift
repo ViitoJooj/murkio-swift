@@ -1,17 +1,18 @@
 import Foundation
 import XCTest
+
 @testable import MurkioIdentity
 
-/// libs/spec, shared with the service and the other SDKs.
+/// The copy of the spec every Murkio client SDK is tested against, at the root of the package.
 let specDirectory: URL = {
     var url = URL(fileURLWithPath: #filePath)
-    for _ in 0..<5 { url.deleteLastPathComponent() }
+    for _ in 0..<3 { url.deleteLastPathComponent() }
     return url.appendingPathComponent("spec")
 }()
 
 func readSpec(_ path: String) -> JSONValue {
     guard let text = try? String(contentsOf: specDirectory.appendingPathComponent(path), encoding: .utf8),
-          let value = JSONValue.parse(text)
+        let value = JSONValue.parse(text)
     else { fatalError("cannot read spec file \(path)") }
     return value
 }
@@ -146,10 +147,12 @@ func tokens(expiresIn: Int = 900, sessionId: String = "session-1", nowMs: Int64 
     let number = counter.next()
     let seconds = Double(nowMs / 1000)
     return [
-        "access_token": .string(jwt([
-            "iss": "enterprise-auth", "sub": "user-1", "aud": "app-1", "sid": .string(sessionId), "roles": ["user"],
-            "iat": .number(seconds), "exp": .number(seconds + Double(expiresIn)), "jti": .string("j\(number)"),
-        ])),
+        "access_token": .string(
+            jwt([
+                "iss": "enterprise-auth", "sub": "user-1", "aud": "app-1", "sid": .string(sessionId), "roles": ["user"],
+                "iat": .number(seconds), "exp": .number(seconds + Double(expiresIn)), "jti": .string("j\(number)"),
+            ])
+        ),
         "token_type": "Bearer",
         "expires_in": .number(Double(expiresIn)),
         "refresh_token": .string("rt_\(number)"),
