@@ -201,20 +201,31 @@ canvas itself come translated from the dashboard.
 
 ## Developing
 
-This repository is a git submodule of the Murkio identity service
-(`libs/external/swift`), and the commands below run from that checkout.
-
 ```sh
 swift build
 swift test
 ```
 
-Everything except the SwiftUI views and the Keychain also builds and runs on Linux, which
-is where the core is tested on every change: it runs the vectors and fixtures in
-`libs/spec` that every Murkio client SDK shares (the web SDK runs the same ones), so the
-canvas is laid out and the flows behave like on the web. On macOS the tests also lay the
-canvas out in a real SwiftUI pass and compare every box, and exercise the Keychain.
-`Generated/Spec.swift` comes from `node libs/scripts/sync-client-spec.mjs`. Set
-`MURKIO_LIVE_API`, `MURKIO_LIVE_PK`, `MURKIO_LIVE_EMAIL` and `MURKIO_LIVE_PASSWORD` to also
-run `LiveTests` against a real API, and `MURKIO_SCREENSHOTS=<dir>` (macOS) to render the
-canvas to a PNG.
+Everything except the SwiftUI views and the Keychain also builds and runs on Linux. The
+tests run the vectors and fixtures every Murkio client SDK shares (the web SDK runs the
+same ones), so the canvas is laid out and the flows behave like on the web. On macOS they
+also lay the canvas out in a real SwiftUI pass and compare every box, and exercise the
+Keychain. That copy (`spec/`), `Generated/Spec.swift` and the checks in `infra/pipeline/`
+are kept in the Murkio identity service and synced from there, so they are not edited
+here. Set `MURKIO_LIVE_API`, `MURKIO_LIVE_PK`, `MURKIO_LIVE_EMAIL` and
+`MURKIO_LIVE_PASSWORD` to also run `LiveTests` against a real API, and
+`MURKIO_SCREENSHOTS=<dir>` (macOS) to render the canvas to a PNG.
+
+Every pull request runs the workflows in `.github/workflows`. The same checks, locally:
+
+| Workflow | What it runs |
+| --- | --- |
+| Build | `swift build` on Linux and macOS, and `xcodebuild build` for the iOS simulator |
+| Format | `swift format lint --strict --recursive Sources Tests Package.swift` (Swift 6.0.3; `swift format --in-place` fixes) |
+| Lint | `swift build --build-tests -Xswiftc -warnings-as-errors` on Linux and macOS |
+| Tests | `swift test` on Linux and macOS |
+| Quality & Governance Checks | `for check in infra/pipeline/*.py; do python3 "$check"; done` |
+| Security | `gitleaks git .`, `zizmor --pedantic .` |
+| CodeQL, Dependency Review | run by GitHub on the pull request |
+
+Security reports: see [SECURITY.md](SECURITY.md).
