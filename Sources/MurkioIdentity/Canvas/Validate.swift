@@ -17,7 +17,7 @@ private let styleKeys: Set<String> = [
 private let variants = ["", "body", "h1", "h2", "h3"]
 private let maxElements = 150
 private let maxDataImages = 4
-private let maxDataImageChars = 87384 // ceil(64 KiB / 3) * 4
+private let maxDataImageChars = 87384  // ceil(64 KiB / 3) * 4
 
 private func nibble(_ byte: UInt8) -> UInt8? {
     switch byte {
@@ -71,7 +71,7 @@ private func cleanText(_ value: JSONValue?, maxChars: Int, multiline: Bool) -> B
 private func isLocale(_ value: String) -> Bool {
     let parts = value.split(separator: "-", omittingEmptySubsequences: false)
     guard parts.count <= 2, let language = parts.first, (2...3).contains(language.utf8.count),
-          language.utf8.allSatisfy({ (UInt8(ascii: "a")...UInt8(ascii: "z")).contains($0) })
+        language.utf8.allSatisfy({ (UInt8(ascii: "a")...UInt8(ascii: "z")).contains($0) })
     else { return false }
     if parts.count == 1 { return true }
     return parts[1].utf8.count == 2 && parts[1].utf8.allSatisfy { (UInt8(ascii: "A")...UInt8(ascii: "Z")).contains($0) }
@@ -79,7 +79,7 @@ private func isLocale(_ value: String) -> Bool {
 
 private func text(_ value: JSONValue?, maxChars: Int = 120, multiline: Bool = false) -> LocalizedText? {
     guard let value, value.object != nil, cleanText(value["default"], maxChars: maxChars, multiline: multiline),
-          let fallback = value["default"]?.string
+        let fallback = value["default"]?.string
     else { return nil }
     var translations: [String: String] = [:]
     if let raw = value["i18n"], !raw.isNull {
@@ -129,10 +129,11 @@ private func isDataImage(_ value: String) -> Bool {
         data.removeLast()
         padding += 1
     }
-    return !data.isEmpty && padding <= 2 && data.allSatisfy { byte in
-        (UInt8(ascii: "A")...UInt8(ascii: "Z")).contains(byte) || (UInt8(ascii: "a")...UInt8(ascii: "z")).contains(byte)
-            || (UInt8(ascii: "0")...UInt8(ascii: "9")).contains(byte) || byte == UInt8(ascii: "+") || byte == UInt8(ascii: "/")
-    }
+    return !data.isEmpty && padding <= 2
+        && data.allSatisfy { byte in
+            (UInt8(ascii: "A")...UInt8(ascii: "Z")).contains(byte) || (UInt8(ascii: "a")...UInt8(ascii: "z")).contains(byte)
+                || (UInt8(ascii: "0")...UInt8(ascii: "9")).contains(byte) || byte == UInt8(ascii: "+") || byte == UInt8(ascii: "/")
+        }
 }
 
 private func isImageSource(_ value: JSONValue?) -> Bool {
@@ -248,8 +249,9 @@ private func layout(_ value: JSONValue?, problems: inout [String], path: String)
     for id in rawItems.keys.sorted() {
         let item = rawItems[id]
         if let item, item.object != nil, isInt(item["x"], 0, width), isInt(item["y"], 0, height), isInt(item["w"], 1, width),
-           isInt(item["h"], 1, height), int(item["x"]) + int(item["w"]) <= width, int(item["y"]) + int(item["h"]) <= height,
-           isInt(item["z"], 0, 1000) {
+            isInt(item["h"], 1, height), int(item["x"]) + int(item["w"]) <= width, int(item["y"]) + int(item["h"]) <= height,
+            isInt(item["z"], 0, 1000)
+        {
             items[id] = CanvasItem(
                 x: int(item["x"]), y: int(item["y"]), w: int(item["w"]), h: int(item["h"]), z: int(item["z"]),
                 hidden: item["hidden"]?.bool == true
@@ -262,10 +264,11 @@ private func layout(_ value: JSONValue?, problems: inout [String], path: String)
 }
 
 private func isElementId(_ value: String) -> Bool {
-    (1...32).contains(value.utf8.count) && value.utf8.allSatisfy { byte in
-        (UInt8(ascii: "a")...UInt8(ascii: "z")).contains(byte) || (UInt8(ascii: "0")...UInt8(ascii: "9")).contains(byte)
-            || byte == UInt8(ascii: "_") || byte == UInt8(ascii: "-")
-    }
+    (1...32).contains(value.utf8.count)
+        && value.utf8.allSatisfy { byte in
+            (UInt8(ascii: "a")...UInt8(ascii: "z")).contains(byte) || (UInt8(ascii: "0")...UInt8(ascii: "9")).contains(byte)
+                || byte == UInt8(ascii: "_") || byte == UInt8(ascii: "-")
+        }
 }
 
 private func screen(_ value: JSONValue?, problems: inout [String], path: String, images: inout Int) -> CanvasScreen? {
@@ -334,7 +337,7 @@ public struct SanitizeResult: Sendable {
 /// Checks a canvas document before it is drawn.
 public func sanitizeDocument(_ value: JSONValue?) -> SanitizeResult {
     guard let value, value["schema"]?.number == 1, let theme = value["theme"], theme.object != nil,
-          let screens = value["screens"]?.object
+        let screens = value["screens"]?.object
     else { return SanitizeResult(document: nil, problems: ["not a schema 1 canvas"]) }
 
     var colors: [String: CanvasColor] = [:]
@@ -342,9 +345,9 @@ public func sanitizeDocument(_ value: JSONValue?) -> SanitizeResult {
         if let color = parseColor(theme["colors"]?[name]) { colors[name] = color }
     }
     guard let font = theme["font"]?.string.flatMap(CanvasFont.init(rawValue:)), isInt(theme["radius"], 0, 32),
-          let primary = colors["primary"], let onPrimary = colors["on_primary"], let textColor = colors["text"],
-          let muted = colors["muted"], let background = colors["background"], let surface = colors["surface"],
-          let border = colors["border"], let error = colors["error"]
+        let primary = colors["primary"], let onPrimary = colors["on_primary"], let textColor = colors["text"],
+        let muted = colors["muted"], let background = colors["background"], let surface = colors["surface"],
+        let border = colors["border"], let error = colors["error"]
     else { return SanitizeResult(document: nil, problems: ["invalid theme"]) }
 
     var problems: [String] = []

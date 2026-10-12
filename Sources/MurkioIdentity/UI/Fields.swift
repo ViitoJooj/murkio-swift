@@ -177,10 +177,12 @@ private struct StepSheet: ViewModifier {
     let presenter: UUID?
 
     func body(content: Content) -> some View {
-        content.sheet(isPresented: Binding(
-            get: { form.state.inStep && form.presenter == presenter },
-            set: { shown in if !shown, form.state.inStep { form.back() } }
-        )) {
+        content.sheet(
+            isPresented: Binding(
+                get: { form.state.inStep && form.presenter == presenter },
+                set: { shown in if !shown, form.state.inStep { form.back() } }
+            )
+        ) {
             ScrollView {
                 if let theme = form.theme {
                     StepView(flow: form.flow, state: form.state, theme: theme, locale: form.client.locale) { link in
@@ -290,13 +292,15 @@ private struct ActionButton<Label: View>: View {
 
     var body: some View {
         WithForm { form in
-            Button(action: {
-                if let onLogin { form.onLogin = onLogin }
-                if let onError { form.onError = onError }
-                Task { await form.run(register: register, presenter: id) }
-            }, label: label)
-                .disabled(form.state.busy)
-                .modifier(StepSheet(form: form, presenter: id))
+            Button(
+                action: {
+                    if let onLogin { form.onLogin = onLogin }
+                    if let onError { form.onError = onError }
+                    Task { await form.run(register: register, presenter: id) }
+                }, label: label
+            )
+            .disabled(form.state.busy)
+            .modifier(StepSheet(form: form, presenter: id))
         }
     }
 }

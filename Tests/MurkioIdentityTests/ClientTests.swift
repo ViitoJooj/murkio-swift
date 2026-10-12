@@ -3,10 +3,12 @@ import XCTest
 
 final class ClientTests: XCTestCase {
     private func bootstrapping(etag: String? = nil) -> FakeAPI {
-        FakeAPI(["GET /v1/client": { call in
-            if let etag, call.headers["If-None-Match"] == etag { return Answer(304) }
-            return .data(bootstrapJSON(), headers: etag.map { ["etag": $0] } ?? [:])
-        }])
+        FakeAPI([
+            "GET /v1/client": { call in
+                if let etag, call.headers["If-None-Match"] == etag { return Answer(304) }
+                return .data(bootstrapJSON(), headers: etag.map { ["etag": $0] } ?? [:])
+            }
+        ])
     }
 
     func testOnlyAPublishableKeyIsAccepted() {
@@ -64,10 +66,12 @@ final class ClientTests: XCTestCase {
     func testAFailedRevalidationFallsBackToTheLastBootstrap() async throws {
         let clock = Clock()
         let online = Opened()
-        let api = FakeAPI(["GET /v1/client": { _ in
-            if online.links.isEmpty { return .data(bootstrapJSON()) }
-            throw Offline()
-        }])
+        let api = FakeAPI([
+            "GET /v1/client": { _ in
+                if online.links.isEmpty { return .data(bootstrapJSON()) }
+                throw Offline()
+            }
+        ])
         let client = makeClient(api, clock: clock)
         let first = try await client.bootstrap()
 
@@ -93,12 +97,14 @@ final class ClientTests: XCTestCase {
 
     func testTheProfileIsCachedPerSessionForAMinute() async throws {
         let clock = Clock()
-        let api = FakeAPI(["POST /v1/me": { _ in
-            .data([
-                "id": "user-1", "session_id": "session-1", "email": "ana@example.com", "email_verified": true,
-                "roles": ["user", "admin"], "mfa_enabled": false, "created_at": "2029-05-01T10:00:00Z",
-            ])
-        }])
+        let api = FakeAPI([
+            "POST /v1/me": { _ in
+                .data([
+                    "id": "user-1", "session_id": "session-1", "email": "ana@example.com", "email_verified": true,
+                    "roles": ["user", "admin"], "mfa_enabled": false, "created_at": "2029-05-01T10:00:00Z",
+                ])
+            }
+        ])
         let client = makeClient(api, clock: clock)
         let nobody = try await client.getUser()
         XCTAssertNil(nobody)
@@ -124,9 +130,11 @@ final class ClientTests: XCTestCase {
 
     func testAFailedProfileIsNotCached() async throws {
         let failing = Opened()
-        let api = FakeAPI(["POST /v1/me": { _ in
-            failing.links.isEmpty ? .error(500, "bss-00") : .data(["id": "user-1"])
-        }])
+        let api = FakeAPI([
+            "POST /v1/me": { _ in
+                failing.links.isEmpty ? .error(500, "bss-00") : .data(["id": "user-1"])
+            }
+        ])
         let client = makeClient(api)
         await client.sessions.setSession(tokenPair(), keepLogged: true)
 

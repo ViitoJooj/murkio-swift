@@ -222,9 +222,11 @@ public struct MurkioIdentityCanvas: View {
                         submit: submit, message: element.id == slot ? message : nil, model: model, onLink: { href in open(href) }
                     )
                     .frame(width: CGFloat(rect.w), height: CGFloat(rect.h), alignment: .topLeading)
-                    .background(GeometryReader { proxy in
-                        Color.clear.preference(key: ElementFramesKey.self, value: [element.id: proxy.frame(in: .named("murkio-frame"))])
-                    })
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear.preference(key: ElementFramesKey.self, value: [element.id: proxy.frame(in: .named("murkio-frame"))])
+                        }
+                    )
                     .offset(x: CGFloat(rect.x), y: CGFloat(rect.y))
                     .allowsHitTesting(!element.type.decorative)
                     .accessibilitySortPriority(Double(placement.order.count - (reading[element.id] ?? 0)))

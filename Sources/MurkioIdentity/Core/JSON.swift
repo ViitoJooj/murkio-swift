@@ -121,7 +121,8 @@ public enum JSONValue: Equatable, Sendable {
 // No nil literal on purpose: `nil` must keep meaning "no value" wherever a
 // `JSONValue?` is expected, never a JSON null.
 extension JSONValue: ExpressibleByStringLiteral, ExpressibleByBooleanLiteral, ExpressibleByIntegerLiteral,
-    ExpressibleByFloatLiteral, ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
+    ExpressibleByFloatLiteral, ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral
+{
     public init(stringLiteral value: String) { self = .string(value) }
     public init(booleanLiteral value: Bool) { self = .bool(value) }
     public init(integerLiteral value: Int) { self = .number(Double(value)) }
@@ -279,7 +280,8 @@ private struct JSONParser {
             case UInt8(ascii: "u"):
                 var code = try hex4()
                 if (0xD800...0xDBFF).contains(code), at + 1 < bytes.count, bytes[at] == UInt8(ascii: "\\"),
-                   bytes[at + 1] == UInt8(ascii: "u") {
+                    bytes[at + 1] == UInt8(ascii: "u")
+                {
                     let saved = at
                     at += 2
                     let low = try hex4()

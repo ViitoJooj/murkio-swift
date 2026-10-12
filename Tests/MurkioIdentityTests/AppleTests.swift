@@ -204,11 +204,13 @@ final class CanvasViewTests: XCTestCase {
             var canvas: MurkioIdentityCanvas
             if let settings = entry["config"], !settings.isNull {
                 let raw = rawDocument(at: reference)
-                let api = FakeAPI(["GET /v1/client": { _ in
-                    guard case .object(var bootstrap) = bootstrapJSON(document: raw) else { return Answer(500) }
-                    bootstrap["config"] = settings
-                    return .data(.object(bootstrap))
-                }])
+                let api = FakeAPI([
+                    "GET /v1/client": { _ in
+                        guard case .object(var bootstrap) = bootstrapJSON(document: raw) else { return Answer(500) }
+                        bootstrap["config"] = settings
+                        return .data(.object(bootstrap))
+                    }
+                ])
                 let client = makeClient(api, oauthRedirectURL: entry["oauth"]?.bool == true ? "https://app.example.com/callback" : nil)
                 canvas = MurkioIdentityCanvas(client: client, screen: screen)
             } else {

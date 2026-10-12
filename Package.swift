@@ -5,7 +5,7 @@ let package = Package(
     name: "MurkioIdentity",
     platforms: [.iOS(.v15), .macOS(.v12)],
     products: [
-        .library(name: "MurkioIdentity", targets: ["MurkioIdentity"]),
+        .library(name: "MurkioIdentity", targets: ["MurkioIdentity"])
     ],
     targets: [
         .target(name: "MurkioIdentity", path: "Sources/MurkioIdentity"),
