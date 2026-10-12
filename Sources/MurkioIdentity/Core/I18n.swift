@@ -31,10 +31,12 @@ public func murkioString(_ locale: String, _ key: String, _ params: [String: Str
             break
         }
         let name = String(rest[rest.index(after: open)..<close])
-        let isName = !name.isEmpty && name.unicodeScalars.allSatisfy {
-            ($0.value >= 0x30 && $0.value <= 0x39) || ($0.value >= 0x41 && $0.value <= 0x5A)
-                || ($0.value >= 0x61 && $0.value <= 0x7A) || $0.value == 0x5F
-        }
+        let isName =
+            !name.isEmpty
+            && name.unicodeScalars.allSatisfy {
+                ($0.value >= 0x30 && $0.value <= 0x39) || ($0.value >= 0x41 && $0.value <= 0x5A)
+                    || ($0.value >= 0x61 && $0.value <= 0x7A) || $0.value == 0x5F
+            }
         if isName {
             out += params[name] ?? ""
         } else {

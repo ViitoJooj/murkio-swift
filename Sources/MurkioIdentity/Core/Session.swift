@@ -37,8 +37,8 @@ public struct MurkioSession: Equatable, Sendable {
 
     init?(json text: String?) {
         guard let text, let json = JSONValue.parse(text),
-              let access = json["accessToken"]?.string, let refresh = json["refreshToken"]?.string,
-              let expires = json["expiresAt"]?.number, let session = json["sessionId"]?.string
+            let access = json["accessToken"]?.string, let refresh = json["refreshToken"]?.string,
+            let expires = json["expiresAt"]?.number, let session = json["sessionId"]?.string
         else { return nil }
         self.init(accessToken: access, refreshToken: refresh, expiresAt: Int64(expires), sessionId: session, ephemeral: json["ephemeral"]?.bool == true)
     }
@@ -213,7 +213,8 @@ actor SessionManager {
 
         // Another process of the app (an extension) may already have used the refresh token.
         if let stored = MurkioSession(json: storage.read(key)), stored.sessionId == before.sessionId,
-           stored.refreshToken != before.refreshToken {
+            stored.refreshToken != before.refreshToken
+        {
             before = stored
             set(stored)
         }

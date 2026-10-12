@@ -65,8 +65,8 @@ final class ValidateTests: XCTestCase {
     /// The default canvas with one member of one element replaced.
     private func canvas(element index: Int, set member: String, to value: JSONValue) -> JSONValue {
         guard case .object(var root) = readSpec("canvas/default.json"), case .object(var screens)? = root["screens"],
-              case .object(var signIn)? = screens["sign_in"], case .array(var elements)? = signIn["elements"],
-              case .object(var element) = elements[index]
+            case .object(var signIn)? = screens["sign_in"], case .array(var elements)? = signIn["elements"],
+            case .object(var element) = elements[index]
         else { fatalError("unexpected default canvas") }
         element[member] = value
         elements[index] = .object(element)
@@ -95,9 +95,12 @@ final class ValidateTests: XCTestCase {
     }
 
     func testAStyleOutOfRangeIsIgnoredAndTheElementStays() {
-        let result = sanitizeDocument(canvas(element: 6, set: "style", to: [
-            "font_size": 500, "opacity": 3, "color": "url(javascript:1)", "radius": 12, "position": "fixed",
-        ]))
+        let result = sanitizeDocument(
+            canvas(
+                element: 6, set: "style",
+                to: [
+                    "font_size": 500, "opacity": 3, "color": "url(javascript:1)", "radius": 12, "position": "fixed",
+                ]))
         let login = result.document?.signIn.elements.first { $0.id == "login" }
         XCTAssertNotNil(login)
         XCTAssertNil(login?.style.fontSize)

@@ -1,0 +1,356 @@
+{
+  "description": "a mobile layout, an https image and a site-relative link",
+  "document": {
+    "schema": 1,
+    "theme": {
+      "font": "system-sans",
+      "radius": 8,
+      "colors": {
+        "primary": "#4f46e5",
+        "on_primary": "#ffffff",
+        "text": "#111827",
+        "muted": "#6b7280",
+        "background": "#ffffff",
+        "surface": "#f9fafb",
+        "border": "#d1d5db",
+        "error": "#b42318"
+      }
+    },
+    "screens": {
+      "sign_in": {
+        "elements": [
+          {
+            "id": "title",
+            "type": "text",
+            "props": {
+              "text": {
+                "default": "Entrar",
+                "i18n": {
+                  "en": "Sign in"
+                }
+              },
+              "variant": "h1"
+            },
+            "style": {
+              "font_size": 24,
+              "font_weight": 700
+            }
+          },
+          {
+            "id": "error",
+            "type": "error_message",
+            "props": {},
+            "style": {}
+          },
+          {
+            "id": "email",
+            "type": "email_input",
+            "props": {
+              "label": {
+                "default": "E-mail",
+                "i18n": {
+                  "en": "Email"
+                }
+              },
+              "placeholder": {
+                "default": "voce@exemplo.com",
+                "i18n": {
+                  "en": "you@example.com"
+                }
+              }
+            },
+            "style": {}
+          },
+          {
+            "id": "password",
+            "type": "password_input",
+            "props": {
+              "label": {
+                "default": "Senha",
+                "i18n": {
+                  "en": "Password"
+                }
+              },
+              "show_toggle": true
+            },
+            "style": {}
+          },
+          {
+            "id": "keep_logged",
+            "type": "keep_logged",
+            "props": {
+              "label": {
+                "default": "Manter conectado",
+                "i18n": {
+                  "en": "Keep me signed in"
+                }
+              }
+            },
+            "style": {}
+          },
+          {
+            "id": "forgot",
+            "type": "forgot_password_link",
+            "props": {
+              "label": {
+                "default": "Esqueci a senha",
+                "i18n": {
+                  "en": "Forgot password?"
+                }
+              }
+            },
+            "style": {
+              "text_align": "right"
+            }
+          },
+          {
+            "id": "login",
+            "type": "login_button",
+            "props": {
+              "label": {
+                "default": "Entrar",
+                "i18n": {
+                  "en": "Sign in"
+                }
+              }
+            },
+            "style": {}
+          },
+          {
+            "id": "divider",
+            "type": "divider",
+            "props": {
+              "label": {
+                "default": "ou",
+                "i18n": {
+                  "en": "or"
+                }
+              }
+            },
+            "style": {}
+          },
+          {
+            "id": "register",
+            "type": "register_button",
+            "props": {
+              "label": {
+                "default": "Criar conta",
+                "i18n": {
+                  "en": "Create account"
+                }
+              }
+            },
+            "style": {
+              "color": "#4f46e5",
+              "background": "#ffffff",
+              "border_color": "#4f46e5",
+              "border_width": 1
+            }
+          },
+          {
+            "id": "logo",
+            "type": "image",
+            "props": {
+              "src": "https://cdn.example.com/logo.png",
+              "alt": {
+                "default": "Logo da Acme",
+                "i18n": {
+                  "en": "Acme logo"
+                }
+              }
+            },
+            "style": {}
+          },
+          {
+            "id": "terms",
+            "type": "link",
+            "props": {
+              "text": {
+                "default": "Termos de uso"
+              },
+              "href": "/terms"
+            },
+            "style": {
+              "font_size": 12
+            }
+          }
+        ],
+        "layouts": {
+          "desktop": {
+            "width": 400,
+            "height": 500,
+            "background": {
+              "color": "#ffffff"
+            },
+            "items": {
+              "divider": {
+                "x": 32,
+                "y": 360,
+                "w": 336,
+                "h": 24,
+                "z": 1
+              },
+              "email": {
+                "x": 32,
+                "y": 112,
+                "w": 336,
+                "h": 48,
+                "z": 1
+              },
+              "error": {
+                "x": 32,
+                "y": 80,
+                "w": 336,
+                "h": 24,
+                "z": 1
+              },
+              "forgot": {
+                "x": 220,
+                "y": 236,
+                "w": 148,
+                "h": 44,
+                "z": 1
+              },
+              "keep_logged": {
+                "x": 32,
+                "y": 236,
+                "w": 180,
+                "h": 44,
+                "z": 1
+              },
+              "login": {
+                "x": 32,
+                "y": 296,
+                "w": 336,
+                "h": 48,
+                "z": 1
+              },
+              "password": {
+                "x": 32,
+                "y": 176,
+                "w": 336,
+                "h": 48,
+                "z": 1
+              },
+              "register": {
+                "x": 32,
+                "y": 400,
+                "w": 336,
+                "h": 48,
+                "z": 1
+              },
+              "title": {
+                "x": 32,
+                "y": 32,
+                "w": 336,
+                "h": 40,
+                "z": 1
+              },
+              "logo": {
+                "x": 168,
+                "y": 0,
+                "w": 64,
+                "h": 32,
+                "z": 2
+              },
+              "terms": {
+                "x": 32,
+                "y": 456,
+                "w": 336,
+                "h": 44,
+                "z": 1
+              }
+            }
+          },
+          "mobile": {
+            "width": 360,
+            "height": 640,
+            "background": {
+              "color": "#f9fafb"
+            },
+            "items": {
+              "title": {
+                "x": 16,
+                "y": 24,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "error": {
+                "x": 16,
+                "y": 88,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "email": {
+                "x": 16,
+                "y": 152,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "password": {
+                "x": 16,
+                "y": 216,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "forgot": {
+                "x": 16,
+                "y": 280,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "keep_logged": {
+                "x": 16,
+                "y": 344,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "login": {
+                "x": 16,
+                "y": 408,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "divider": {
+                "x": 16,
+                "y": 472,
+                "w": 328,
+                "h": 48,
+                "z": 1,
+                "hidden": true
+              },
+              "register": {
+                "x": 16,
+                "y": 536,
+                "w": 328,
+                "h": 48,
+                "z": 1
+              },
+              "logo": {
+                "x": 148,
+                "y": 600,
+                "w": 64,
+                "h": 32,
+                "z": 2
+              },
+              "terms": {
+                "x": 16,
+                "y": 560,
+                "w": 328,
+                "h": 44,
+                "z": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -18,7 +18,7 @@ public struct TokenPair: Equatable, Sendable {
     /// Reads a token pair; anything else is an `unknown` error.
     init(json: JSONValue?) throws {
         guard let access = json?["access_token"]?.string, let refresh = json?["refresh_token"]?.string,
-              let expires = json?["expires_in"]?.number, let session = json?["session_id"]?.string
+            let expires = json?["expires_in"]?.number, let session = json?["session_id"]?.string
         else { throw MurkioError("unknown", message: "unexpected token response") }
         self.init(accessToken: access, refreshToken: refresh, expiresIn: Int(expires), sessionId: session)
     }
@@ -136,7 +136,7 @@ public func decodeClaims(_ token: String) -> AccessClaims? {
     let parts = token.split(separator: ".", omittingEmptySubsequences: false)
     guard parts.count >= 2, let bytes = base64Decode(String(parts[1])) else { return nil }
     guard let claims = JSONValue.parse(String(decoding: bytes, as: UTF8.self)),
-          let exp = claims["exp"]?.number, let sub = claims["sub"]?.string
+        let exp = claims["exp"]?.number, let sub = claims["sub"]?.string
     else { return nil }
     return AccessClaims(subject: sub, sessionId: claims["sid"]?.string ?? "", expiresAt: Int(exp), roles: claims["roles"]?.strings ?? [])
 }

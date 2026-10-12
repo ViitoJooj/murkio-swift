@@ -11,8 +11,8 @@ final class LiveTests: XCTestCase {
     func testBootstrapLoginProfileRefreshAndLogoutAgainstTheAPI() async throws {
         let environment = ProcessInfo.processInfo.environment
         guard let apiURL = environment["MURKIO_LIVE_API"], let key = environment["MURKIO_LIVE_PK"],
-              let email = environment["MURKIO_LIVE_EMAIL"], let password = environment["MURKIO_LIVE_PASSWORD"],
-              ![apiURL, key, email, password].contains("")
+            let email = environment["MURKIO_LIVE_EMAIL"], let password = environment["MURKIO_LIVE_PASSWORD"],
+            ![apiURL, key, email, password].contains("")
         else { throw XCTSkip("set MURKIO_LIVE_* to run against a real API") }
 
         let storage = MurkioMemoryStorage()

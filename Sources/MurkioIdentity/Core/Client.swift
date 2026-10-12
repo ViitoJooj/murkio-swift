@@ -140,7 +140,7 @@ public final class MurkioClient: @unchecked Sendable {
         let query = queryOf(link)
         guard let state = query["state"], !state.isEmpty else { return false }
         guard let attempt = storage.read(oauthKey).flatMap(JSONValue.parse), let verifier = attempt["verifier"]?.string,
-              attempt["state"]?.string == state
+            attempt["state"]?.string == state
         else { return false }
         storage.delete(oauthKey)
         let keepLogged = attempt["keepLogged"]?.bool == true

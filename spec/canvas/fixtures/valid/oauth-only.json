@@ -1,0 +1,120 @@
+{
+  "description": "password login disabled, only oauth buttons",
+  "config": {
+    "password": false,
+    "oauth_providers": [
+      "google",
+      "github"
+    ],
+    "redirect_urls": [
+      "https://app.example.com/callback"
+    ]
+  },
+  "document": {
+    "schema": 1,
+    "theme": {
+      "font": "system-sans",
+      "radius": 8,
+      "colors": {
+        "primary": "#4f46e5",
+        "on_primary": "#ffffff",
+        "text": "#111827",
+        "muted": "#6b7280",
+        "background": "#ffffff",
+        "surface": "#f9fafb",
+        "border": "#d1d5db",
+        "error": "#b42318"
+      }
+    },
+    "screens": {
+      "sign_in": {
+        "elements": [
+          {
+            "id": "title",
+            "type": "text",
+            "props": {
+              "text": {
+                "default": "Entrar",
+                "i18n": {
+                  "en": "Sign in"
+                }
+              },
+              "variant": "h1"
+            },
+            "style": {
+              "font_size": 24,
+              "font_weight": 700
+            }
+          },
+          {
+            "id": "error",
+            "type": "error_message",
+            "props": {},
+            "style": {}
+          },
+          {
+            "id": "google",
+            "type": "oauth_button",
+            "props": {
+              "provider": "google"
+            },
+            "style": {}
+          },
+          {
+            "id": "github",
+            "type": "oauth_button",
+            "props": {
+              "provider": "github",
+              "label": {
+                "default": "Entrar com GitHub"
+              }
+            },
+            "style": {
+              "background": "#24292f",
+              "color": "#ffffff"
+            }
+          }
+        ],
+        "layouts": {
+          "desktop": {
+            "width": 400,
+            "height": 500,
+            "background": {
+              "color": "#ffffff"
+            },
+            "items": {
+              "error": {
+                "x": 32,
+                "y": 80,
+                "w": 336,
+                "h": 24,
+                "z": 1
+              },
+              "title": {
+                "x": 32,
+                "y": 32,
+                "w": 336,
+                "h": 40,
+                "z": 1
+              },
+              "google": {
+                "x": 32,
+                "y": 120,
+                "w": 336,
+                "h": 48,
+                "z": 1
+              },
+              "github": {
+                "x": 32,
+                "y": 184,
+                "w": 336,
+                "h": 48,
+                "z": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

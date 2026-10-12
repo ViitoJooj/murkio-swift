@@ -70,10 +70,12 @@ final class SessionTests: XCTestCase {
     func testCallersThatAskAtTheSameTimeShareOneRefresh() async throws {
         let gate = Gate()
         let clock = self.clock
-        let api = FakeAPI(["POST /v1/token/refresh": { _ in
-            await gate.wait()
-            return .data(tokens(nowMs: clock.time))
-        }])
+        let api = FakeAPI([
+            "POST /v1/token/refresh": { _ in
+                await gate.wait()
+                return .data(tokens(nowMs: clock.time))
+            }
+        ])
         let client = await start(api)
         await signIn(client)
         clock.advance(890_000)
@@ -92,10 +94,12 @@ final class SessionTests: XCTestCase {
     func testACancelledCallerDoesNotCancelTheRefresh() async throws {
         let gate = Gate()
         let clock = self.clock
-        let api = FakeAPI(["POST /v1/token/refresh": { _ in
-            await gate.wait()
-            return .data(tokens(nowMs: clock.time))
-        }])
+        let api = FakeAPI([
+            "POST /v1/token/refresh": { _ in
+                await gate.wait()
+                return .data(tokens(nowMs: clock.time))
+            }
+        ])
         let client = await start(api)
         let first = await signIn(client)
         clock.advance(890_000)
@@ -170,10 +174,12 @@ final class SessionTests: XCTestCase {
     }
 
     func testAnEphemeralSessionLeftByAPreviousRunIsLoggedOutAndDeleted() async {
-        storage.write(key, JSONValue.object([
-            "accessToken": "old-access", "refreshToken": "old-refresh", "expiresAt": .number(Double(clock.time + 300_000)),
-            "sessionId": "session-of-a-previous-run", "ephemeral": true,
-        ]).write())
+        storage.write(
+            key,
+            JSONValue.object([
+                "accessToken": "old-access", "refreshToken": "old-refresh", "expiresAt": .number(Double(clock.time + 300_000)),
+                "sessionId": "session-of-a-previous-run", "ephemeral": true,
+            ]).write())
         let api = FakeAPI(["POST /v1/logout": { _ in Answer(204) }])
 
         let client = await start(api)
@@ -207,10 +213,12 @@ final class SessionTests: XCTestCase {
     func testSigningOutDeletesTheRecordBeforeCallingTheAPI() async {
         let storage = self.storage
         let seen = Opened()
-        let api = FakeAPI(["POST /v1/logout": { _ in
-            _ = seen.open(storage.keys.isEmpty ? "deleted" : "still stored")
-            return .error(500, "bss-00")
-        }])
+        let api = FakeAPI([
+            "POST /v1/logout": { _ in
+                _ = seen.open(storage.keys.isEmpty ? "deleted" : "still stored")
+                return .error(500, "bss-00")
+            }
+        ])
         let client = await start(api)
         let session = await signIn(client)
 
